@@ -1,9 +1,14 @@
-package com.example.autentication_app.auth;
+package com.example.autentication_app.service;
 
 import com.example.autentication_app.config.JwtService;
-import com.example.autentication_app.user.Role;
-import com.example.autentication_app.user.User;
-import com.example.autentication_app.user.UserRepository;
+import com.example.autentication_app.dto.AuthenticationRequest;
+import com.example.autentication_app.dto.AuthenticationResponse;
+import com.example.autentication_app.dto.RegisterRequest;
+import com.example.autentication_app.exception.UserAlreadyExistsException;
+import com.example.autentication_app.mapper.UserMapper;
+import com.example.autentication_app.model.Role;
+import com.example.autentication_app.model.User;
+import com.example.autentication_app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,26 +21,23 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
 
     private final UserRepository repository;
-
     private final PasswordEncoder passwordEncoder;
-
     private final JwtService jwtService;
-
     private final AuthenticationManager authenticationManager;
+    private final UserMapper userMapper;
 
     public AuthenticationResponse register(RegisterRequest request) {
-        var user = User.builder()
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
-                .build();
+
+        if (repository.findByEmail(request.getEmail()).isPresent()) {
+            throw new UserAlreadyExistsException(
+                    "User with email \"" + request.getEmail() + "\" already exists!"
+            );
+        }
+
+        User user = userMapper.toUser(request, passwordEncoder);
         repository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        String jwtToken = jwtService.generateToken(user);
+        return new AuthenticationResponse(jwtToken);
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -45,11 +47,9 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-        var user = repository.findByEmail(request.getEmail())
+        User user = repository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException(request.getEmail()));
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        String jwtToken = jwtService.generateToken(user);
+        return new AuthenticationResponse(jwtToken);
     }
 }

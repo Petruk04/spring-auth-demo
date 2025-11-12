@@ -1,57 +1,65 @@
-HELP.md
+# =====================================
+# 🔒 Sensitive files
+# =====================================
+secret.properties
+
+# =====================================
+# 🧱 Build and target directories
+# =====================================
 target/
-.mvn/wrapper/maven-wrapper.jar
+build/
 !**/src/main/**/target/
 !**/src/test/**/target/
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# =====================================
+# ☕ Java / Spring Boot
+# =====================================
+*.class
+*.jar
+*.war
+*.ear
+*.log
+*.ctxt
+.mtj.tmp/
+hs_err_pid*
 
-### IntelliJ IDEA ###
-.idea
+# =====================================
+# 🧰 Maven Wrapper
+# =====================================
+.mvn/wrapper/maven-wrapper.jar
+
+# =====================================
+# 🧩 IDE-specific files
+# =====================================
+
+## IntelliJ IDEA
+.idea/
 *.iws
 *.iml
 *.ipr
 
-### NetBeans ###
+## Eclipse / Spring Tool Suite (STS)
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+## NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
+## VS Code
 .vscode/
 
 # =====================================
-# Java / Spring Boot .gitignore
+# 📄 Miscellaneous
 # =====================================
-
-# Compiled class files
-*.class
-
-# Log files
-*.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.ear
-
-# virtual machine crash logs
-hs_err_pid*
+HELP.md
