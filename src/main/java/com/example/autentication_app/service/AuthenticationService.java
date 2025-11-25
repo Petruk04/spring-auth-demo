@@ -6,7 +6,6 @@ import com.example.autentication_app.dto.AuthenticationResponse;
 import com.example.autentication_app.dto.RegisterRequest;
 import com.example.autentication_app.exception.UserAlreadyExistsException;
 import com.example.autentication_app.mapper.UserMapper;
-import com.example.autentication_app.model.Role;
 import com.example.autentication_app.model.User;
 import com.example.autentication_app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +27,9 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
 
-        if (repository.findByEmail(request.getEmail()).isPresent()) {
+        if (repository.findByEmailIgnoreCase(request.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException(
-                    "User with email \"" + request.getEmail() + "\" already exists!"
+                    "User with email '" + request.getEmail() + "' already exists!"
             );
         }
 
@@ -47,7 +46,7 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-        User user = repository.findByEmail(request.getEmail())
+        User user = repository.findByEmailIgnoreCase(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException(request.getEmail()));
         String jwtToken = jwtService.generateToken(user);
         return new AuthenticationResponse(jwtToken);
