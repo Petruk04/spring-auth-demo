@@ -8,7 +8,7 @@ public class AutenticationAppApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AutenticationAppApplication.class, args);
-		System.out.println("DEPLOY TEST");
+		System.out.println("DEPLOY_TEST");
 	}
 
 }
