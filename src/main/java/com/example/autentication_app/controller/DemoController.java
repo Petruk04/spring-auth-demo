@@ -11,6 +11,6 @@ public class DemoController {
 
     @GetMapping
     public String sayHello() {
-        return "Hello from secured endpoint!";
+        return "Hello from secured endpoint!" + "\n**VERSION 2.0**";
     }
 }
